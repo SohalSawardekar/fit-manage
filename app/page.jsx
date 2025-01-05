@@ -14,7 +14,7 @@ const landing_page = () => {
       <nav>
         {/* Desktop view */}
         <div className='hidden lg:flex flex-row justify-around items-center h-20 bg-gradient-to-b from-slate-300 to-gray-200'>
-          <Link href='/'><Image src='/logo/logo.png' alt='gym_logo' width={70} height={70} className='rounded-full'/></Link>
+          <Image src='/logo/logo.png' alt='gym_logo' width={70} height={70} className='rounded-full'/>
 
           <div className='flex flex-row gap-x-11 px-6 bg-gray-400 rounded-3xl font-bold'>
             <Link href='/' className='navbtn1'>Home</Link>
@@ -56,7 +56,15 @@ const landing_page = () => {
         </div>
 
 
-        <div className='min-h-screen'></div>
+        <div className='h-screen flex flex-col items-center justify-start pt-[6rem]'>
+          <div className='font-extrabold flex flex-col items-center text-[2.5rem]'>
+            <h1>Fitness is a journey,</h1>
+            <h1>not a destination.</h1>
+          </div>
+          <p className='flex items-center justify-center w-1/2 pt-[2rem]'>
+            "Fitness is a journey, not a destination" emphasizes that fitness is an ongoing process rather than a final goal. It’s about consistently making healthier choices, embracing progress, and building habits that sustain a lifetime of well-being. Setbacks are part of the journey, but resilience and determination keep you moving forward. By focusing on growth and enjoying the process, fitness becomes a fulfilling and sustainable way of life.
+          </p>
+        </div>
       </div>
     </main>
   )

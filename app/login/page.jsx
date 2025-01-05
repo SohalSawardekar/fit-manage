@@ -1,11 +1,106 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react';
 
-const login = () => {
+const Login = () => {
+  const [loginType, setLoginType] = useState('admin'); // State to manage selected login type
+
   return (
-    <div>
-      login
-    </div>
-  )
-}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="w-[90%] max-w-2xl min-h-[70vh] bg-white shadow-lg rounded-[3rem] p-8 ">
+        <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
 
-export default login
+        {/* Dropdown to Select Login Type */}
+        <div className="mb-8 text-center">
+          <label htmlFor="loginType" className="text-lg font-semibold mr-4">
+            Login As:
+          </label>
+          <select
+            id="loginType"
+            value={loginType}
+            onChange={(e) => setLoginType(e.target.value)}
+            className="p-2 border rounded-md focus:outline-blue-500"
+          >
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+            <option value="employee">Employee</option>
+          </select>
+        </div>
+
+        {/* Admin Login Form */}
+        {loginType === 'admin' && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Admin Login</h2>
+            <form className="flex flex-col gap-4 items-center gap-y-[1rem]">
+              <input
+                type="text"
+                placeholder="Username"
+                className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
+              />
+              <div className='pt-[1rem] w-full flex items-center justify-center'>
+                <button className="text-center w-1/3 bg-blue-600 text-white py-3 rounded-3xl hover:bg-blue-700">
+                  Login as Admin
+                </button>  
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* User Login Form */}
+        {loginType === 'user' && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">User Login</h2>
+            <form className="flex flex-col gap-4">
+              <input
+                type="text"
+                placeholder="Username"
+                className="w-full p-3 border rounded-md focus:outline-blue-500"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full p-3 border rounded-md focus:outline-blue-500"
+              />
+              <button className="w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700">
+                Login as User
+              </button>
+            </form>
+            <div className="text-center mt-4">
+              <button className="w-full bg-red-600 text-white p-3 rounded-md hover:bg-red-700">
+                Sign in with Google
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Employee Login Form */}
+        {loginType === 'employee' && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Employee Login</h2>
+            <form className="flex flex-col gap-4">
+              <input
+                type="text"
+                placeholder="Username"
+                className="w-full p-3 border rounded-md focus:outline-blue-500"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-full p-3 border rounded-md focus:outline-blue-500"
+              />
+              <button className="w-full bg-purple-600 text-white p-3 rounded-md hover:bg-purple-700">
+                Login as Employee
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Login;
