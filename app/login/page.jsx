@@ -1,8 +1,10 @@
 'use client'
 import React, { useState } from 'react';
+import GoogleButton from '@node_modules/react-google-button';
+import { signIn } from '@node_modules/next-auth/react';
 
 const Login = () => {
-  const [loginType, setLoginType] = useState('admin'); // State to manage selected login type
+  const [loginType, setLoginType] = useState('user'); // State to manage selected login type
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -26,10 +28,40 @@ const Login = () => {
           </select>
         </div>
 
+        {/* User Login Form */}
+        {loginType === 'user' && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold  pt-4 pb-4 flex justify-center w-full">User Login</h2>
+            <form className="flex flex-col gap-4 items-center gap-y-[1rem]">
+              <input
+                type="text"
+                placeholder="Username"
+                className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
+              />
+              <div className='pt-[1rem] w-full flex items-center justify-center'>
+                <button className="w-1/3 bg-green-600 text-white py-3 rounded-3xl hover:bg-green-700">
+                  Login as User
+                </button>
+              </div>
+            </form>
+            <h1 className='text-[1.5rem] font-extrabold flex justify-center pt-[1rem]'>OR</h1>
+            <div className="text-center mt-4 w-full flex justify-center">
+              <GoogleButton onClick={() => {signIn}}>
+                Sign in with Google
+              </GoogleButton>
+            </div>
+          </div>
+        )}
+
         {/* Admin Login Form */}
         {loginType === 'admin' && (
           <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-4">Admin Login</h2>
+            <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">Admin Login</h2>
             <form className="flex flex-col gap-4 items-center gap-y-[1rem]">
               <input
                 type="text"
@@ -50,51 +82,26 @@ const Login = () => {
           </div>
         )}
 
-        {/* User Login Form */}
-        {loginType === 'user' && (
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-4">User Login</h2>
-            <form className="flex flex-col gap-4">
-              <input
-                type="text"
-                placeholder="Username"
-                className="w-full p-3 border rounded-md focus:outline-blue-500"
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-full p-3 border rounded-md focus:outline-blue-500"
-              />
-              <button className="w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700">
-                Login as User
-              </button>
-            </form>
-            <div className="text-center mt-4">
-              <button className="w-full bg-red-600 text-white p-3 rounded-md hover:bg-red-700">
-                Sign in with Google
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* Employee Login Form */}
         {loginType === 'employee' && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">Employee Login</h2>
-            <form className="flex flex-col gap-4">
+            <h2 className="text-xl font-semibold  pt-4 pb-4 flex justify-center w-full">Employee Login</h2>
+            <form className="flex flex-col gap-4 items-center gap-y-[1rem]">
               <input
                 type="text"
                 placeholder="Username"
-                className="w-full p-3 border rounded-md focus:outline-blue-500"
+                className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
               />
               <input
                 type="password"
                 placeholder="Password"
-                className="w-full p-3 border rounded-md focus:outline-blue-500"
+                className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
               />
-              <button className="w-full bg-purple-600 text-white p-3 rounded-md hover:bg-purple-700">
-                Login as Employee
-              </button>
+              <div className='pt-[1rem] w-full flex items-center justify-center'>
+                <button className="w-1/3 bg-purple-600 text-white py-3 rounded-3xl hover:bg-purple-700">
+                  Login as Employee
+                </button>
+              </div>
             </form>
           </div>
         )}
