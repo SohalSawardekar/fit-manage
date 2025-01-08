@@ -38,6 +38,7 @@ export const authOptions = {
                         email: profile.email,
                         username: profile.name,
                         image: profile.picture,
+                        role: 'user',
                         createdOn: new Date(),
                         lastLoggedIn: new Date(),
                     });

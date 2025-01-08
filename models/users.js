@@ -4,6 +4,8 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, unique: true, required: true },
     username: { type: String, required: true },
     image: { type: String },
+    role: {type: String, enum: ['user', 'admin', 'employee'], required: true},
+    loginType: {type: String, enum: ['Google', 'Email'], required: true},
     createdOn: { type: Date, default: Date.now, required: true },
     lastLoggedIn: { type: Date, default: Date.now, required: true },
 });
