@@ -1,12 +1,38 @@
 'use client'
 
-import { connectToDB } from '@utils/db'
-import GoogleButton from 'react-google-button'
-import { signIn, signOut } from 'next-auth/react'
 import Image from '@node_modules/next/image'
 import Link from '@node_modules/next/link'
+import { useSession } from '@node_modules/next-auth/react'
+import { useEffect } from 'react'
+import { useRouter } from '@node_modules/next/navigation'
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 const landing_page = () => {
+  const { data: session, status } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    if(status === 'authenticated') {
+      router.push('/dashboard')
+    }
+  }, [session, router])
+
+  if (status === "loading") {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+  
   return (
     <main className='h-screen text-gray-700 '>
       
