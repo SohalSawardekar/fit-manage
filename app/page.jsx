@@ -62,7 +62,7 @@ const landing_page = () => {
             <h1>not a destination.</h1>
           </div>
           <p className='flex items-center justify-center w-1/2 pt-[2rem]'>
-            "Fitness is a journey, not a destination" emphasizes that fitness is an ongoing process rather than a final goal. It’s about consistently making healthier choices, embracing progress, and building habits that sustain a lifetime of well-being. Setbacks are part of the journey, but resilience and determination keep you moving forward. By focusing on growth and enjoying the process, fitness becomes a fulfilling and sustainable way of life.
+            Fitness is a journey, not a destination" emphasizes that fitness is an ongoing process rather than a final goal. It’s about consistently making healthier choices, embracing progress, and building habits that sustain a lifetime of well-being. Setbacks are part of the journey, but resilience and determination keep you moving forward. By focusing on growth and enjoying the process, fitness becomes a fulfilling and sustainable way of life.
           </p>
         </div>
       </div>

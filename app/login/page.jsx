@@ -1,10 +1,20 @@
-'use client'
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import GoogleButton from '@node_modules/react-google-button';
-import { signIn } from '@node_modules/next-auth/react';
+import { signIn, useSession } from '@node_modules/next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
-  const [loginType, setLoginType] = useState('user'); // State to manage selected login type
+  const { data: session } = useSession(); 
+  const router = useRouter(); 
+  const [loginType, setLoginType] = useState('user');
+
+  useEffect(() => {
+    if (session) {
+      router.push('/dashboard'); 
+    }
+  }, [session, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -43,15 +53,17 @@ const Login = () => {
                 placeholder="Password"
                 className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
               />
-              <div className='pt-[1rem] w-full flex items-center justify-center'>
+              <div className="pt-[1rem] w-full flex items-center justify-center">
                 <button className="w-1/3 bg-green-600 text-white py-3 rounded-3xl hover:bg-green-700">
                   Login as User
                 </button>
               </div>
             </form>
-            <h1 className='text-[1.5rem] font-extrabold flex justify-center pt-[1rem]'>OR</h1>
+            <h1 className="text-[1.5rem] font-extrabold flex justify-center pt-[1rem]">OR</h1>
             <div className="text-center mt-4 w-full flex justify-center">
-              <GoogleButton onClick={() => {signIn}}>
+              <GoogleButton
+                onClick={() => signIn('google')} // Trigger Google sign-in
+              >
                 Sign in with Google
               </GoogleButton>
             </div>
@@ -73,10 +85,10 @@ const Login = () => {
                 placeholder="Password"
                 className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
               />
-              <div className='pt-[1rem] w-full flex items-center justify-center'>
+              <div className="pt-[1rem] w-full flex items-center justify-center">
                 <button className="text-center w-1/3 bg-blue-600 text-white py-3 rounded-3xl hover:bg-blue-700">
                   Login as Admin
-                </button>  
+                </button>
               </div>
             </form>
           </div>
@@ -97,7 +109,7 @@ const Login = () => {
                 placeholder="Password"
                 className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
               />
-              <div className='pt-[1rem] w-full flex items-center justify-center'>
+              <div className="pt-[1rem] w-full flex items-center justify-center">
                 <button className="w-1/3 bg-purple-600 text-white py-3 rounded-3xl hover:bg-purple-700">
                   Login as Employee
                 </button>
