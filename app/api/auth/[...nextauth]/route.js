@@ -1,35 +1,62 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@models/users";
 import { connectToDB } from "@utils/db";
-import CredentialsProvider from "@node_modules/next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 
 export const authOptions = {
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
+    // Google Provider
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
 
+    // Credentials Provider
     CredentialsProvider({
       credentials: {
-        username: {},
-        password: {}
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
-  
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null
-  
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        try {
+          // Connect to the database
+          await connectToDB();
+
+          // Find user by email
+          const existingUser = await User.findOne({ email: credentials.email });
+
+          if (existingUser) {
+            // Verify the provided password
+            const isValidPassword = await bcrypt.compare(
+              credentials.password,
+              existingUser.password
+            );
+
+            if (isValidPassword) {
+              // Return user object
+              return {
+                id: existingUser._id.toString(),
+                email: existingUser.email,
+                name: existingUser.name,
+                role: existingUser.role,
+                loginType: existingUser.loginType,
+              };
+            } else {
+              throw new Error("Invalid password");
+            }
+          } else {
+            throw new Error("User not found");
+          }
+        } catch (error) {
+          console.error("Error in authorize function:", error.message);
+          throw new Error("Authentication failed. Please check your credentials.");
         }
-      }
+      },
     }),
   ],
   secret: process.env.SECRET,
@@ -42,7 +69,7 @@ export const authOptions = {
         if (sessionUser) {
           session.user.id = sessionUser._id.toString();
           session.user.role = sessionUser.role;
-          session.user.loginType = sessionUser.loginType; // Include loginType in the session
+          session.user.loginType = sessionUser.loginType;
         }
         return session;
       } catch (error) {
@@ -50,33 +77,35 @@ export const authOptions = {
         return session;
       }
     },
-    async signIn({ profile }) {
+    async signIn({ account, profile, user }) {
       try {
         await connectToDB();
 
-        // Check if the user exists
-        const userExists = await User.findOne({ email: profile.email });
+        // Handle Google sign-in
+        if (account.provider === "google") {
+          const userExists = await User.findOne({ email: profile.email });
 
-        if (userExists) {
-          // Update lastLoggedIn timestamp
-          userExists.lastLoggedIn = new Date();
-          await userExists.save();
-        } else {
-          // Create a new user
-          console.log("Creating a new Google user");
-          await User.create({
-            name: profile.name,
-            email: profile.email,
-            googleId: profile.sub,
-            image: profile.picture,
-            role: "user", 
-            loginType: "Google",
-            age: 0,
-            gender: 'male',
-            contactNo: '', 
-            dateJoined: new Date(),
-            lastLoggedIn: new Date(),
-          });
+          if (userExists) {
+            // Update lastLoggedIn timestamp
+            userExists.lastLoggedIn = new Date();
+            await userExists.save();
+          } else {
+            // Create a new user for Google sign-in
+            console.log("Creating a new Google user");
+            await User.create({
+              name: profile.name,
+              email: profile.email,
+              googleId: profile.sub,
+              image: profile.picture,
+              role: "user",
+              loginType: "Google",
+              age: 0,
+              gender: "male",
+              contactNo: "",
+              dateJoined: new Date(),
+              lastLoggedIn: new Date(),
+            });
+          }
         }
 
         return true;

@@ -19,9 +19,14 @@ export default function form() {
 
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        
-        
+      e.preventDefault();
+      
+      signIn('credentials', {
+        email: username,
+        password: password,
+        callbackUrl: '/dashboard',  
+        redirect: false
+      }).catch((error) => setErrMessage('Login failed. Please check your credentials.'));
     };
 
     return(
