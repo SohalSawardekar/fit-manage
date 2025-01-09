@@ -1,25 +1,30 @@
 'use client'
 
 import Form from './form';
+import { useRouter } from 'next/navigation';
+import { useSession } from '@node_modules/next-auth/react';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';  
-import { useSession } from 'next-auth/react';  
+import LoadingScreen from '@components/loadingScreen';
 
 const Login = () => {
-  const router = useRouter(); 
-  const { data: session, status } = useSession(); 
+  const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/dashboard');  
+      router.push('/dashboard');
     }
-  }, [status, router]);  
+  }, [status, router]);
 
-  if (status === 'authenticated') {
-    return null;  
+  if (status === 'loading') {
+    return <LoadingScreen />;
   }
 
-  return <Form />;  
+  if (status === 'unauthenticated') {
+    return <Form />;
+  }
+
+  return null;
 };
 
 export default Login;

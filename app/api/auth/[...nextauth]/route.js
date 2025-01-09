@@ -67,7 +67,6 @@ export const authOptions = {
           await User.create({
             name: profile.name,
             email: profile.email,
-            password: null, 
             googleId: profile.sub,
             image: profile.picture,
             role: "user", 

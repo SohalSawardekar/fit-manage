@@ -1,11 +1,11 @@
 'use client'
 
-import { useSession } from 'next-auth/react';  // Correct import
+import { useSession } from 'next-auth/react';  
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';  // Correct import
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import { useRouter } from 'next/navigation';  
+
 import LandingPage from '@components/landingPage';
+import LoadingScreen from '@components/loadingScreen';
 
 const Page = () => {
   const { data: session, status } = useSession();
@@ -22,24 +22,12 @@ const Page = () => {
     }
   }, [status, router]);
 
-  
   if (!isClient) {
     return null;
   }
 
   if (status === 'loading') {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingScreen />;
   }
 
   if (status === 'unauthenticated') {

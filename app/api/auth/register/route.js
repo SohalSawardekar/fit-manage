@@ -33,7 +33,6 @@ export async function POST(req) {
       name: username,
       email: email,
       password: hashedPassword,
-      googleId: null,
       role: role,
       image: '',
       age: -1,

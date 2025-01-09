@@ -1,12 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import GoogleButton from 'react-google-button';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useRouter } from 'next/navigation';
-
 
 export default function form() {
     const [loginType, setLoginType] = useState('user'); 
@@ -18,7 +16,7 @@ export default function form() {
     const [isAdminPasswordVisible, setIsAdminPasswordVisible] = useState(false); 
     const [isEmployeePasswordVisible, setIsEmployeePasswordVisible] = useState(false); 
 
-    
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
