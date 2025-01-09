@@ -1,24 +1,39 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import GoogleButton from '@node_modules/react-google-button';
-import { signIn, useSession } from '@node_modules/next-auth/react';
+import GoogleButton from 'react-google-button';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login = () => {
-  const { data: session } = useSession(); 
+  const { data: session, status } = useSession(); 
   const router = useRouter(); 
-  const [loginType, setLoginType] = useState('user');
+  const [loginType, setLoginType] = useState('user'); 
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [ errMessage, setErrMessage ] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false); 
+  const [isAdminPasswordVisible, setIsAdminPasswordVisible] = useState(false); 
+  const [isEmployeePasswordVisible, setIsEmployeePasswordVisible] = useState(false); 
 
   useEffect(() => {
-    if (session) {
+    if (status === 'authenticated') {
       router.push('/dashboard'); 
     }
   }, [session, router]);
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-[90%] max-w-2xl min-h-[70vh] bg-white shadow-lg rounded-[3rem] p-8 ">
+      <div className="w-[90%] max-w-2xl min-h-[70vh] bg-white shadow-lg rounded-[3rem] p-8">
         <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
 
         {/* Dropdown to Select Login Type */}
@@ -41,18 +56,29 @@ const Login = () => {
         {/* User Login Form */}
         {loginType === 'user' && (
           <div className="mb-8">
-            <h2 className="text-xl font-semibold  pt-4 pb-4 flex justify-center w-full">User Login</h2>
-            <form className="flex flex-col gap-4 items-center gap-y-[1rem]">
+            <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">User Login</h2>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-center">
               <input
                 type="text"
                 placeholder="Username"
                 className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
+                onChange={(e) => setUsername(e.target.value)}
               />
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
-              />
+              <div className="relative w-3/4">
+                <input
+                  type={isPasswordVisible ? 'text' : 'password'}
+                  placeholder="Password"
+                  className="w-full p-3 border rounded-md focus:outline-blue-500"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 hover:text-gray-800"
+                >
+                  {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
               <div className="pt-[1rem] w-full flex items-center justify-center">
                 <button className="w-1/3 bg-green-600 text-white py-3 rounded-3xl hover:bg-green-700">
                   Login as User
@@ -67,6 +93,12 @@ const Login = () => {
                 Sign in with Google
               </GoogleButton>
             </div>
+            <div className="flex pt-[3rem] flex-row items-center justify-center">
+              <p>Don't have an account?</p>
+              <Link href="/register" className="font-bold ml-1">
+                Register
+              </Link>
+            </div>
           </div>
         )}
 
@@ -74,19 +106,30 @@ const Login = () => {
         {loginType === 'admin' && (
           <div className="mb-8">
             <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">Admin Login</h2>
-            <form className="flex flex-col gap-4 items-center gap-y-[1rem]">
+            <form className="flex flex-col gap-4 items-center">
               <input
                 type="text"
                 placeholder="Username"
                 className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
+                onChange={(e) => setUsername(e.target.value)}
               />
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
-              />
+              <div className="relative w-3/4">
+                <input
+                  type={isAdminPasswordVisible ? 'text' : 'password'}
+                  placeholder="Password"
+                  className="w-full p-3 border rounded-md focus:outline-blue-500"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setIsAdminPasswordVisible(!isAdminPasswordVisible)}
+                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 hover:text-gray-800"
+                >
+                  {isAdminPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
               <div className="pt-[1rem] w-full flex items-center justify-center">
-                <button className="text-center w-1/3 bg-blue-600 text-white py-3 rounded-3xl hover:bg-blue-700">
+                <button className="w-1/3 bg-blue-600 text-white py-3 rounded-3xl hover:bg-blue-700">
                   Login as Admin
                 </button>
               </div>
@@ -97,18 +140,29 @@ const Login = () => {
         {/* Employee Login Form */}
         {loginType === 'employee' && (
           <div>
-            <h2 className="text-xl font-semibold  pt-4 pb-4 flex justify-center w-full">Employee Login</h2>
-            <form className="flex flex-col gap-4 items-center gap-y-[1rem]">
+            <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">Employee Login</h2>
+            <form className="flex flex-col gap-4 items-center">
               <input
                 type="text"
                 placeholder="Username"
                 className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
+                onChange={(e) => setUsername(e.target.value)}
               />
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
-              />
+              <div className="relative w-3/4">
+                <input
+                  type={isEmployeePasswordVisible ? 'text' : 'password'}
+                  placeholder="Password"
+                  className="w-full p-3 border rounded-md focus:outline-blue-500"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setIsEmployeePasswordVisible(!isEmployeePasswordVisible)}
+                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 hover:text-gray-800"
+                >
+                  {isEmployeePasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
               <div className="pt-[1rem] w-full flex items-center justify-center">
                 <button className="w-1/3 bg-purple-600 text-white py-3 rounded-3xl hover:bg-purple-700">
                   Login as Employee

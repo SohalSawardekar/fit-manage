@@ -5,11 +5,11 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 const Homepage = () => {
-  const { data: session } = useSession(); 
+  const { data: session, status } = useSession(); 
   const router = useRouter(); 
 
   useEffect(() => {
-    if (!session) {
+    if (status === 'unauthenticated') {
       router.push('/'); 
     }
   }, [session, router]);
