@@ -5,11 +5,36 @@ import Link from '@node_modules/next/link';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 
 const Register = () => {
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+
     if(!username || !email || !password || !confirmPassword) {
-      setErrMessage('All fields are neccessary');
+      alert('All fields are neccessary')
+      return
+    }
+
+    try {
+      const res = await fetch('api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }, 
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+          role: 'user',
+        })
+      })
+
+      if(res.ok) {
+        const form = e.target;
+        form.reset();
+      } else {
+        console.log('user registration failed')
+      }
+    } catch (error) {
+      console.log('failed to register')
     }
   };
 

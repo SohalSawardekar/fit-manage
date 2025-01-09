@@ -1,15 +1,58 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-    email: { type: String, unique: true, required: true },
-    username: { type: String, required: true },
-    image: { type: String },
-    role: {type: String, enum: ['user', 'admin', 'employee'], required: true},
-    loginType: {type: String, enum: ['Google', 'Email'], required: true},
-    createdOn: { type: Date, default: Date.now, required: true },
-    lastLoggedIn: { type: Date, default: Date.now, required: true },
-});
-
-const User = mongoose.models.User || mongoose.model("User", UserSchema);
-
-export default User;
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      default: null, 
+    },
+    googleId: {
+      type: String,
+      unique: true, 
+      sparse: true, 
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin', 'trainer'],
+      default: 'user',
+    },
+    image: {
+      type: String,
+    },
+    age: {
+      type: Number,
+    },
+    gender: {
+      type: String,
+      enum: ['male', 'female', 'other'],
+    },
+    contactNo: {
+      type: String,
+    },
+    loginType: {
+      type: String,
+      enum: ['Google', 'Password'],
+      required: true,
+    },
+    dateJoined: {
+      type: Date,
+      default: Date.now,
+    },
+    lastLoggedIn: {
+      type: Date,
+      default: Date.now,
+    },
+  });  
+  
+  const User = mongoose.models.User || mongoose.model("User", UserSchema);
+  
+  export default User;
+  
