@@ -25,7 +25,7 @@ const landingPage = () => {
                 Home
               </Link>
               <Link href="/" className="navbtn1">
-                Packages
+                Plans
               </Link>
               <Link href="/" className="navbtn1">
                 Trainers
