@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 
 export const authOptions = {
   session: {
-    strategy: 'jwt',
+    jwt: true, // Ensure JWT is used for session management
   },
   providers: [
     // Google Provider
@@ -38,7 +38,7 @@ export const authOptions = {
             );
 
             if (isValidPassword) {
-              // Return user object
+              // Return user object, this will be used to create the JWT token
               return {
                 id: existingUser._id.toString(),
                 email: existingUser.email,
@@ -54,29 +54,43 @@ export const authOptions = {
           }
         } catch (error) {
           console.error("Error in authorize function:", error.message);
-          throw new Error("Authentication failed. Please check your credentials.");
+          throw new Error(
+            "Authentication failed. Please check your credentials."
+          );
         }
       },
     }),
   ],
   secret: process.env.SECRET,
   callbacks: {
-    async session({ session }) {
-      try {
-        await connectToDB();
-        const sessionUser = await User.findOne({ email: session.user.email });
+    // JWT callback - Used to create and modify the JWT token
+    async jwt({ token, user }) {
+      if (user) {
+        token.email = user.email;
 
-        if (sessionUser) {
-          session.user.id = sessionUser._id.toString();
-          session.user.role = sessionUser.role;
-          session.user.loginType = sessionUser.loginType;
+        await connectToDB();
+        const existingUser = await User.findOne({ email: token.email });
+        if (existingUser) {
+          token.id = existingUser._id.toString();
+          token.name = existingUser.name;
+          token.role = existingUser.role;
+          token.loginType = existingUser.loginType;
         }
-        return session;
-      } catch (error) {
-        console.error("Error in session callback:", error);
-        return session;
       }
+      return token;
     },
+
+    // Session callback - Used to modify the session object that is returned to the client
+    async session({ session, token }) {
+      session.user.id = token.id;
+      session.user.email = token.email;
+      session.user.name = token.name;
+      session.user.role = token.role;
+      session.user.loginType = token.loginType;
+      return session;
+    },
+
+    // Sign-in callback - Handle Google sign-in and user creation
     async signIn({ account, profile, user }) {
       try {
         await connectToDB();
@@ -99,9 +113,6 @@ export const authOptions = {
               image: profile.picture,
               role: "user",
               loginType: "Google",
-              age: 0,
-              gender: "male",
-              contactNo: "",
               dateJoined: new Date(),
               lastLoggedIn: new Date(),
             });

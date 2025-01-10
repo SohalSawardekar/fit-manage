@@ -1,36 +1,37 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import GoogleButton from 'react-google-button';
-import { signIn } from 'next-auth/react';
-import Link from 'next/link';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import React, { useState } from "react";
+import GoogleButton from "react-google-button";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function form() {
-    const [loginType, setLoginType] = useState('user'); 
+  const [loginType, setLoginType] = useState("user");
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [ errMessage, setErrMessage ] = useState('');
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false); 
-    const [isAdminPasswordVisible, setIsAdminPasswordVisible] = useState(false); 
-    const [isEmployeePasswordVisible, setIsEmployeePasswordVisible] = useState(false); 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errMessage, setErrMessage] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isAdminPasswordVisible, setIsAdminPasswordVisible] = useState(false);
+  const [isEmployeePasswordVisible, setIsEmployeePasswordVisible] =
+    useState(false);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
+    signIn("credentials", {
+      email: username,
+      password: password,
+      callbackUrl: "/dashboard",
+      redirect: false,
+    }).catch((error) =>
+      setErrMessage("Login failed. Please check your credentials.")
+    );
+  };
 
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      
-      signIn('credentials', {
-        email: username,
-        password: password,
-        callbackUrl: '/dashboard',  
-        redirect: false
-      }).catch((error) => setErrMessage('Login failed. Please check your credentials.'));
-    };
-
-    return(
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-[90%] max-w-2xl min-h-[70vh] bg-white shadow-lg rounded-[3rem] p-8">
         <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
 
@@ -52,10 +53,15 @@ export default function form() {
         </div>
 
         {/* User Login Form */}
-        {loginType === 'user' && (
+        {loginType === "user" && (
           <div className="mb-8">
-            <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">User Login</h2>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-center">
+            <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">
+              User Login
+            </h2>
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col gap-4 items-center"
+            >
               <input
                 type="text"
                 placeholder="Username"
@@ -64,7 +70,7 @@ export default function form() {
               />
               <div className="relative w-3/4">
                 <input
-                  type={isPasswordVisible ? 'text' : 'password'}
+                  type={isPasswordVisible ? "text" : "password"}
                   placeholder="Password"
                   className="w-full p-3 border rounded-md focus:outline-blue-500"
                   onChange={(e) => setPassword(e.target.value)}
@@ -83,10 +89,12 @@ export default function form() {
                 </button>
               </div>
             </form>
-            <h1 className="text-[1.5rem] font-extrabold flex justify-center pt-[1rem]">OR</h1>
+            <h1 className="text-[1.5rem] font-extrabold flex justify-center pt-[1rem]">
+              OR
+            </h1>
             <div className="text-center mt-4 w-full flex justify-center">
               <GoogleButton
-                onClick={() => signIn('google')} // Trigger Google sign-in
+                onClick={() => signIn("google")} // Trigger Google sign-in
               >
                 Sign in with Google
               </GoogleButton>
@@ -101,9 +109,11 @@ export default function form() {
         )}
 
         {/* Admin Login Form */}
-        {loginType === 'admin' && (
+        {loginType === "admin" && (
           <div className="mb-8">
-            <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">Admin Login</h2>
+            <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">
+              Admin Login
+            </h2>
             <form className="flex flex-col gap-4 items-center">
               <input
                 type="text"
@@ -113,14 +123,16 @@ export default function form() {
               />
               <div className="relative w-3/4">
                 <input
-                  type={isAdminPasswordVisible ? 'text' : 'password'}
+                  type={isAdminPasswordVisible ? "text" : "password"}
                   placeholder="Password"
                   className="w-full p-3 border rounded-md focus:outline-blue-500"
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
-                  onClick={() => setIsAdminPasswordVisible(!isAdminPasswordVisible)}
+                  onClick={() =>
+                    setIsAdminPasswordVisible(!isAdminPasswordVisible)
+                  }
                   className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 hover:text-gray-800"
                 >
                   {isAdminPasswordVisible ? <FaEyeSlash /> : <FaEye />}
@@ -136,9 +148,11 @@ export default function form() {
         )}
 
         {/* Employee Login Form */}
-        {loginType === 'employee' && (
+        {loginType === "employee" && (
           <div>
-            <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">Employee Login</h2>
+            <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">
+              Employee Login
+            </h2>
             <form className="flex flex-col gap-4 items-center">
               <input
                 type="text"
@@ -148,14 +162,16 @@ export default function form() {
               />
               <div className="relative w-3/4">
                 <input
-                  type={isEmployeePasswordVisible ? 'text' : 'password'}
+                  type={isEmployeePasswordVisible ? "text" : "password"}
                   placeholder="Password"
                   className="w-full p-3 border rounded-md focus:outline-blue-500"
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
-                  onClick={() => setIsEmployeePasswordVisible(!isEmployeePasswordVisible)}
+                  onClick={() =>
+                    setIsEmployeePasswordVisible(!isEmployeePasswordVisible)
+                  }
                   className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 hover:text-gray-800"
                 >
                   {isEmployeePasswordVisible ? <FaEyeSlash /> : <FaEye />}
@@ -171,5 +187,5 @@ export default function form() {
         )}
       </div>
     </div>
-    );
+  );
 }
