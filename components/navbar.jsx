@@ -14,9 +14,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState("");
+
+  
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -60,7 +62,18 @@ const Navbar = () => {
           />
         </Link>
 
-        <div>Nav btns</div>
+        {/* Navigation Button */}
+        <div className="flex flex-row justify-around bg-slate-200 rounded-full px-auto py-auto font-semibold gap-x-8">
+          <Link href="/dashboard" className="navbtn1">
+            Dashboard
+          </Link>
+          <Link href="/dashboard" className="navbtn1">
+            Progress
+          </Link>
+          <Link href="/dashboard" className="navbtn1">
+            add data
+          </Link>
+        </div>
 
         {/* Profile */}
         <DropdownMenu>
