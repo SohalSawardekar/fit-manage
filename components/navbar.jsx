@@ -12,13 +12,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState("");
-
-  
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -63,16 +63,35 @@ const Navbar = () => {
         </Link>
 
         {/* Navigation Button */}
-        <div className="flex flex-row justify-around bg-slate-200 rounded-full px-auto py-auto font-semibold gap-x-8">
-          <Link href="/dashboard" className="navbtn1">
+        <div className="flex flex-row w-[40%] justify-around rounded-full px-auto py-auto font-semibold">
+          <Link
+            href="/dashboard"
+            className="px-6 py-2 rounded-full text-slate-800 hover:bg-slate-600 hover:text-white"
+          >
             Dashboard
           </Link>
-          <Link href="/dashboard" className="navbtn1">
+          <Link
+            href="/dashboard"
+            className="px-6 py-2 rounded-full text-slate-800 hover:bg-slate-600 hover:text-white"
+          >
             Progress
           </Link>
-          <Link href="/dashboard" className="navbtn1">
+          <Link
+            href="/dashboard"
+            className="px-6 py-2 rounded-full text-slate-800 hover:bg-slate-600 hover:text-white"
+          >
             add data
           </Link>
+        </div>
+
+        {/* Search Bar */}
+        <div className="flex flex-row items-center">
+          <Input
+            type="search"
+            placeholder="Search"
+            className="bg-white w-[20rem]"
+          />
+          <SearchIcon className="text-gray-500 -translate-x-10" />
         </div>
 
         {/* Profile */}
@@ -123,7 +142,7 @@ const Navbar = () => {
             </div>
             <DropdownMenuSeparator className="mt-3 mb-3" />
             <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="/profile">Profile</Link>
+              <Link href="/dashboard/profile">Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled

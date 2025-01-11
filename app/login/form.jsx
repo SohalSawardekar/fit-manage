@@ -46,9 +46,8 @@ export default function form() {
             onChange={(e) => setLoginType(e.target.value)}
             className="p-2 border rounded-md focus:outline-blue-500"
           >
-            <option value="admin">Admin</option>
             <option value="user">User</option>
-            <option value="employee">Employee</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
 
@@ -141,45 +140,6 @@ export default function form() {
               <div className="pt-[1rem] w-full flex items-center justify-center">
                 <button className="w-1/3 bg-blue-600 text-white py-3 rounded-3xl hover:bg-blue-700">
                   Login as Admin
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {/* Employee Login Form */}
-        {loginType === "employee" && (
-          <div>
-            <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">
-              Employee Login
-            </h2>
-            <form className="flex flex-col gap-4 items-center">
-              <input
-                type="text"
-                placeholder="Username"
-                className="w-3/4 p-3 border rounded-md focus:outline-blue-500"
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <div className="relative w-3/4">
-                <input
-                  type={isEmployeePasswordVisible ? "text" : "password"}
-                  placeholder="Password"
-                  className="w-full p-3 border rounded-md focus:outline-blue-500"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setIsEmployeePasswordVisible(!isEmployeePasswordVisible)
-                  }
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 hover:text-gray-800"
-                >
-                  {isEmployeePasswordVisible ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
-              <div className="pt-[1rem] w-full flex items-center justify-center">
-                <button className="w-1/3 bg-purple-600 text-white py-3 rounded-3xl hover:bg-purple-700">
-                  Login as Employee
                 </button>
               </div>
             </form>

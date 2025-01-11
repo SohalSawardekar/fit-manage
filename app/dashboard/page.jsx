@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@components/navbar";
-import LandingPage from "@components/landingPage";
+import LoadingScreen from "@components/loadingScreen";
 
 const Homepage = () => {
   const { data: session, status } = useSession();
@@ -17,7 +17,7 @@ const Homepage = () => {
   }, [session, router]);
 
   if (status === "loading") {
-    return <LandingPage />;
+    return <LoadingScreen />;
   }
 
   return (

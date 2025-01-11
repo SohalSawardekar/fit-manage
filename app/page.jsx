@@ -1,24 +1,23 @@
-'use client'
+"use client";
 
-import { useSession } from 'next-auth/react';  
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';  
-
-import LandingPage from '@components/landingPage';
-import LoadingScreen from '@components/loadingScreen';
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import LandingPage from "@components/landingPage";
+import LoadingScreen from "@components/loadingScreen";
+import { useState, useEffect } from "react";
 
 const Page = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);  
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);  
+    setIsClient(true);
   }, []);
 
   useEffect(() => {
-    if (status === 'authenticated') {
-      router.push('/dashboard');
+    if (status === "authenticated") {
+      router.push("/dashboard");
     }
   }, [status, router]);
 
@@ -26,15 +25,15 @@ const Page = () => {
     return null;
   }
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return <LoadingScreen />;
   }
 
-  if (status === 'unauthenticated') {
-    return <LandingPage />;  
+  if (status === "unauthenticated") {
+    return <LandingPage />;
   }
 
-  return null;  
+  return null;
 };
 
 export default Page;

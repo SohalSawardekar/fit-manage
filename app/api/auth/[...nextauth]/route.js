@@ -113,6 +113,11 @@ export const authOptions = {
               image: profile.picture,
               role: "user",
               loginType: "Google",
+              DOB: new Date(),
+              age: -1,
+              gender: "male",
+              contactNo: null,
+              paid: false,
               dateJoined: new Date(),
               lastLoggedIn: new Date(),
             });

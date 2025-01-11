@@ -21,11 +21,14 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["user", "admin", "trainer"],
+    enum: ["user", "admin"],
     default: "user",
   },
   image: {
     type: String,
+  },
+  DOB: {
+    type: Date,
   },
   age: {
     type: Number,
@@ -49,6 +52,12 @@ const UserSchema = new mongoose.Schema({
   lastLoggedIn: {
     type: Date,
     default: Date.now,
+  },
+  dueDate: {
+    type: Date,
+  },
+  paid: {
+    type: Boolean,
   },
 });
 
