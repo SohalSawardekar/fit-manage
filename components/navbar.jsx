@@ -14,11 +14,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import SearchIcon from "@mui/icons-material/Search";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState("");
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -63,24 +65,46 @@ const Navbar = () => {
         </Link>
 
         {/* Navigation Button */}
-        <div className="flex flex-row w-[40%] justify-around rounded-full px-auto py-auto font-semibold">
+        <div className="flex flex-row w-[40%] bg-slate-200 justify-around rounded-full px-auto py-auto font-semibold">
           <Link
             href="/dashboard"
-            className="px-6 py-2 rounded-full text-slate-800 hover:bg-slate-600 hover:text-white"
+            className={`px-12 py-2 rounded-full ${
+              pathname === "/dashboard"
+                ? "bg-blue-900 text-white"
+                : "text-slate-800 hover:bg-slate-600 hover:text-white"
+            }`}
           >
             Dashboard
           </Link>
           <Link
-            href="/dashboard"
-            className="px-6 py-2 rounded-full text-slate-800 hover:bg-slate-600 hover:text-white"
+            href="/dashboard/progress"
+            className={`px-12 py-2 rounded-full ${
+              pathname === "/dashboard/progress"
+                ? "bg-slate-600 text-white"
+                : "text-slate-800 hover:bg-slate-600 hover:text-white"
+            }`}
           >
             Progress
           </Link>
           <Link
-            href="/dashboard"
-            className="px-6 py-2 rounded-full text-slate-800 hover:bg-slate-600 hover:text-white"
+            href="/dashboard/add-data"
+            className={`px-12 py-2 rounded-full ${
+              pathname === "/dashboard/add-data"
+                ? "bg-slate-600 text-white"
+                : "text-slate-800 hover:bg-slate-600 hover:text-white"
+            }`}
           >
-            add data
+            Add Data
+          </Link>
+          <Link
+            href="/dashboard/blogs"
+            className={`px-12 py-2 rounded-full ${
+              pathname === "/dashboard/blogs"
+                ? "bg-slate-600 text-white"
+                : "text-slate-800 hover:bg-slate-600 hover:text-white"
+            }`}
+          >
+            Blogs
           </Link>
         </div>
 
@@ -143,6 +167,9 @@ const Navbar = () => {
             <DropdownMenuSeparator className="mt-3 mb-3" />
             <DropdownMenuItem asChild className="cursor-pointer">
               <Link href="/dashboard/profile">Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link href="/dashboard">Membership</Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled

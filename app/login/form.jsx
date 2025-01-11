@@ -14,8 +14,6 @@ export default function form() {
   const [errMessage, setErrMessage] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isAdminPasswordVisible, setIsAdminPasswordVisible] = useState(false);
-  const [isEmployeePasswordVisible, setIsEmployeePasswordVisible] =
-    useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,7 +21,7 @@ export default function form() {
     signIn("credentials", {
       email: username,
       password: password,
-      callbackUrl: "/dashboard",
+      // callbackUrl: "/dashboard",
       redirect: false,
     }).catch((error) =>
       setErrMessage("Login failed. Please check your credentials.")
@@ -113,7 +111,10 @@ export default function form() {
             <h2 className="text-xl font-semibold pt-4 pb-4 flex justify-center w-full">
               Admin Login
             </h2>
-            <form className="flex flex-col gap-4 items-center">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col gap-4 items-center"
+            >
               <input
                 type="text"
                 placeholder="Username"
