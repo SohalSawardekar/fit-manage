@@ -68,7 +68,7 @@ const Navbar = () => {
         <div className="flex flex-row w-[40%] bg-slate-200 justify-around rounded-full px-auto py-auto font-semibold">
           <Link
             href="/user/dashboard"
-            className={`px-12 py-2 rounded-full ${
+            className={`w-full text-center px-auto py-2 rounded-full ${
               pathname === "/user/dashboard"
                 ? "bg-blue-900 text-white"
                 : "text-slate-800 hover:bg-slate-600 hover:text-white"
@@ -78,7 +78,7 @@ const Navbar = () => {
           </Link>
           <Link
             href="/user/dashboard/progress"
-            className={`px-12 py-2 rounded-full ${
+            className={`w-full text-center px-auto py-2 rounded-full ${
               pathname === "/user/dashboard/progress"
                 ? "bg-blue-900 text-white"
                 : "text-slate-800 hover:bg-slate-600 hover:text-white"
@@ -88,7 +88,7 @@ const Navbar = () => {
           </Link>
           <Link
             href="/user/dashboard/add-data"
-            className={`px-12 py-2 rounded-full ${
+            className={`w-full text-center px-auto py-2 rounded-full ${
               pathname === "/user/dashboard/add-data"
                 ? "bg-blue-900 text-white"
                 : "text-slate-800 hover:bg-slate-600 hover:text-white"
@@ -98,7 +98,7 @@ const Navbar = () => {
           </Link>
           <Link
             href="/user/dashboard/blogs"
-            className={`px-12 py-2 rounded-full ${
+            className={`w-full text-center px-auto py-2 rounded-full ${
               pathname === "/user/dashboard/blogs"
                 ? "bg-blue-900 text-white"
                 : "text-slate-800 hover:bg-slate-600 hover:text-white"
@@ -113,7 +113,7 @@ const Navbar = () => {
           <Input
             type="search"
             placeholder="Search"
-            className="bg-white w-[20rem]"
+            className="bg-white w-full"
           />
           <SearchIcon className="text-gray-500 -translate-x-10" />
         </div>

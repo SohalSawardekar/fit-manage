@@ -1,14 +1,37 @@
 import React from "react";
 import Navbar from "@components/navbar";
+import { Button } from "@components/ui/button";
+import Link from "@node_modules/next/link";
 
 const page = () => {
   return (
-    <div>
+    <section>
       <Navbar />
-      <div>
-        <h1>Blog Page</h1>
+      <div className="flex flex-col items-center w-full bg-slate-50 ">
+        <div className="mt-[5rem] flex flex-row justify-end items-end w-[60%] gap-x-[1rem]">
+          <Button
+            variant="outline"
+            className="hover:bg-slate-800 hover:text-white bg-slate-300 text-slate-800 font-semibold border-dotted border-slate-600"
+          >
+            Create
+          </Button>
+          <Button
+            variant="outline"
+            className="hover:bg-slate-800 hover:text-white bg-slate-300 text-slate-800 font-semibold border-dotted border-slate-600"
+          >
+            Generate
+          </Button>
+        </div>
+        <div className="mt-[1rem] min-h-screen bg-slate-200 flex justify-center w-[60%] rounded-3xl">
+          <div className=" w-full h-[8rem] flex items-center justify-center bg-gradient-to-br from-zinc-300 via-gray-300 to-slate-300 rounded-t-3xl">
+            <h1 className="text-[4rem] font-bold bg-gradient-to-br from-sky-700 via-sky-600 to-cyan-400 bg-transparent text-transparent bg-clip-text ">
+              Blogs
+            </h1>
+          </div>
+        </div>
+        <div className="min-h-[5rem]"></div>
       </div>
-    </div>
+    </section>
   );
 };
 
