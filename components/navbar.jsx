@@ -54,7 +54,7 @@ const Navbar = () => {
       {/* Desktop View */}
       <div className="hidden lg:flex flex-row justify-around items-center min-h-[5rem] bg-slate-300">
         {/* Logo */}
-        <Link href="/dashboard">
+        <Link href="dashboard">
           <Image
             src="/logo/logo.png"
             alt="gym_logo"
@@ -67,9 +67,9 @@ const Navbar = () => {
         {/* Navigation Button */}
         <div className="flex flex-row w-[40%] bg-slate-200 justify-around rounded-full px-auto py-auto font-semibold">
           <Link
-            href="/dashboard"
+            href="/user/dashboard"
             className={`px-12 py-2 rounded-full ${
-              pathname === "/dashboard"
+              pathname === "/user/dashboard"
                 ? "bg-blue-900 text-white"
                 : "text-slate-800 hover:bg-slate-600 hover:text-white"
             }`}
@@ -77,30 +77,30 @@ const Navbar = () => {
             Dashboard
           </Link>
           <Link
-            href="/dashboard/progress"
+            href="/user/dashboard/progress"
             className={`px-12 py-2 rounded-full ${
-              pathname === "/dashboard/progress"
-                ? "bg-slate-600 text-white"
+              pathname === "/user/dashboard/progress"
+                ? "bg-blue-900 text-white"
                 : "text-slate-800 hover:bg-slate-600 hover:text-white"
             }`}
           >
             Progress
           </Link>
           <Link
-            href="/dashboard/add-data"
+            href="/user/dashboard/add-data"
             className={`px-12 py-2 rounded-full ${
-              pathname === "/dashboard/add-data"
-                ? "bg-slate-600 text-white"
+              pathname === "/user/dashboard/add-data"
+                ? "bg-blue-900 text-white"
                 : "text-slate-800 hover:bg-slate-600 hover:text-white"
             }`}
           >
             Add Data
           </Link>
           <Link
-            href="/dashboard/blogs"
+            href="/user/dashboard/blogs"
             className={`px-12 py-2 rounded-full ${
-              pathname === "/dashboard/blogs"
-                ? "bg-slate-600 text-white"
+              pathname === "/user/dashboard/blogs"
+                ? "bg-blue-900 text-white"
                 : "text-slate-800 hover:bg-slate-600 hover:text-white"
             }`}
           >
@@ -166,10 +166,10 @@ const Navbar = () => {
             </div>
             <DropdownMenuSeparator className="mt-3 mb-3" />
             <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="/dashboard/profile">Profile</Link>
+              <Link href="dashboard/profile">Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="/dashboard">Membership</Link>
+              <Link href="dashboard">Membership</Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled

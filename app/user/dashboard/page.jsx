@@ -6,15 +6,15 @@ import { useRouter } from "next/navigation";
 import Navbar from "@components/navbar";
 import LoadingScreen from "@components/loadingScreen";
 
-const Homepage = () => {
+const page = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
-    }
-  }, [session, router]);
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     router.push("/");
+  //   }
+  // }, [session, router]);
 
   if (status === "loading") {
     return <LoadingScreen />;
@@ -41,4 +41,4 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+export default page;

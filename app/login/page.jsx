@@ -7,28 +7,28 @@ import { useEffect } from "react";
 import LoadingScreen from "@components/loadingScreen";
 
 const Login = () => {
-  const router = useRouter();
-  const { data: session, status } = useSession();
+  // const router = useRouter();
+  // const { data: session, status } = useSession();
 
-  useEffect(() => {
-    if (session && status === "authenticated") {
-      if (session.user.role === "user") {
-        router.push("/dashboard");
-      } else {
-        router.push("/admin");
-      }
-    }
-  }, [status, router]);
+  // useEffect(() => {
+  //   if (session && status === "authenticated") {
+  //     if (session.user.role === "user") {
+  //       router.push("/user/dashboard");
+  //     } else {
+  //       router.push("/admin");
+  //     }
+  //   }
+  // }, [status, router]);
 
-  if (status === "loading") {
-    return <LoadingScreen />;
-  }
+  // if (status === "loading") {
+  //   return <LoadingScreen />;
+  // }
 
-  if (status === "unauthenticated") {
-    return <Form />;
-  }
+  // if (status === "unauthenticated") {
+  // }
 
-  return null;
+  return <Form />;
+  // return null;
 };
 
 export default Login;

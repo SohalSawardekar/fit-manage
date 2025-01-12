@@ -7,33 +7,37 @@ import LoadingScreen from "@components/loadingScreen";
 import { useState, useEffect } from "react";
 
 const Page = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
+  // const { data: session, status } = useSession();
+  // const router = useRouter();
+  // const [isClient, setIsClient] = useState(false);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // useEffect(() => {
+  //   setIsClient(true);
+  // }, []);
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      router.push("/dashboard");
-    }
-  }, [status, router]);
+  // useEffect(() => {
+  //   if (status === "authenticated") {
+  //     if (session.user.role === "user") {
+  //       router.push("/user/dashboard");
+  //     } else {
+  //       router.push("/admin");
+  //     }
+  //   }
+  // }, [status, router]);
 
-  if (!isClient) {
-    return null;
-  }
+  // if (!isClient) {
+  //   return null;
+  // }
 
-  if (status === "loading") {
-    return <LoadingScreen />;
-  }
+  // if (status === "loading") {
+  //   return <LoadingScreen />;
+  // }
 
-  if (status === "unauthenticated") {
-    return <LandingPage />;
-  }
+  // if (status === "unauthenticated") {
+  // }
+  return <LandingPage />;
 
-  return null;
+  // return null;
 };
 
 export default Page;

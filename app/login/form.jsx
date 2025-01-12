@@ -5,27 +5,40 @@ import GoogleButton from "react-google-button";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useSession } from "next-auth/react";
 
-export default function form() {
+export default function Form() {
   const [loginType, setLoginType] = useState("user");
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errMessage, setErrMessage] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isAdminPasswordVisible, setIsAdminPasswordVisible] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    signIn("credentials", {
-      email: username,
-      password: password,
-      // callbackUrl: "/dashboard",
-      redirect: false,
-    }).catch((error) =>
-      setErrMessage("Login failed. Please check your credentials.")
-    );
+    try {
+      // Determine redirect URL after sign-in
+      const redirectURL = loginType === "admin" ? "/admin" : "/user/dashboard";
+
+      const res = await signIn("credentials", {
+        email: username,
+        password: password,
+        callbackUrl: redirectURL,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        setErrMessage("Login failed. Please check your credentials.");
+      } else {
+        // Redirect manually after successful login
+        window.location.href = res?.url || redirectURL;
+      }
+    } catch (error) {
+      console.log(`Error: ${error}`);
+      setErrMessage("An unexpected error occurred.");
+    }
   };
 
   return (

@@ -8,6 +8,7 @@ import bcrypt from "bcryptjs";
 export const authOptions = {
   session: {
     jwt: true, // Ensure JWT is used for session management
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   providers: [
     // Google Provider

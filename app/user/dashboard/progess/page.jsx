@@ -1,15 +1,13 @@
 import React from "react";
 import Navbar from "@components/navbar";
 
-const BlogPage = () => {
+const page = () => {
   return (
     <div>
       <Navbar />
-      <div>
-        <h1>Blog Page</h1>
-      </div>
+      <div>progress</div>
     </div>
   );
 };
 
-export default BlogPage;
+export default page;
