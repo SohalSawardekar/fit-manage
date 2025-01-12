@@ -1,25 +1,31 @@
+"use client";
 import React from "react";
 import Navbar from "@components/navbar";
 import { Button } from "@components/ui/button";
 import Link from "@node_modules/next/link";
+import { usePathname } from "@node_modules/next/navigation";
 
 const page = () => {
+  const pathName = usePathname();
+
   return (
     <section>
       <Navbar />
       <div className="flex flex-col items-center w-full bg-slate-50 ">
         <div className="mt-[5rem] flex flex-row justify-end items-end w-[60%] gap-x-[1rem]">
           <Button
+            asChild
             variant="outline"
             className="hover:bg-slate-800 hover:text-white bg-slate-300 text-slate-800 font-semibold border-dotted border-slate-600"
           >
-            Create
+            <Link href={pathName + "/createBlog"}>Create</Link>
           </Button>
           <Button
+            asChild
             variant="outline"
             className="hover:bg-slate-800 hover:text-white bg-slate-300 text-slate-800 font-semibold border-dotted border-slate-600"
           >
-            Generate
+            <Link href={pathName + "/generateBlog"}>Generate</Link>
           </Button>
         </div>
         <div className="mt-[1rem] min-h-screen bg-slate-200 flex justify-center w-[60%] rounded-3xl">
