@@ -166,10 +166,10 @@ const Navbar = () => {
             </div>
             <DropdownMenuSeparator className="mt-3 mb-3" />
             <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="dashboard/profile">Profile</Link>
+              <Link href="/user/dashboard/profile">Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="dashboard">Membership</Link>
+              <Link href="/user/dashboard">Membership</Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled

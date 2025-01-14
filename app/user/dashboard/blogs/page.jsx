@@ -1,13 +1,33 @@
 "use client";
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import Navbar from "@components/navbar";
 import { Button } from "@components/ui/button";
-import Link from "@node_modules/next/link";
-import { usePathname } from "@node_modules/next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { CarouselDemo } from "./reuse";
 
-const page = () => {
+const BlogsPage = () => {
+  const [blogs, setBlogs] = useState([]);
   const pathName = usePathname();
+
+  // Fetch blogs data from the API
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await fetch("/api/blogs"); // Replace with your API endpoint
+        if (!response.ok) {
+          throw new Error("Failed to fetch blogs");
+        }
+        const data = await response.json();
+        setBlogs(data);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   return (
     <section>
@@ -36,7 +56,14 @@ const page = () => {
             </h1>
           </div>
           <div className="mt-14 w-full flex items-center justify-center min-h-full">
-            <CarouselDemo />
+            {blogs.length > 0 ? (
+              <CarouselDemo data={blogs} />
+            ) : (
+              <p className="text-lg text-gray-500">
+                No blogs available
+                {console.log({ blogs })}
+              </p>
+            )}
           </div>
           <div className="min-h-[5rem]" />
         </div>
@@ -46,4 +73,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default BlogsPage;
