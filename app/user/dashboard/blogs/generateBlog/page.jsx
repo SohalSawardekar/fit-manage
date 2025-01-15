@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import Image from "@node_modules/next/image";
+import Link from "@node_modules/next/link";
 
 export default function GenerateBlog() {
   const [prompt, setPrompt] = useState("");
@@ -45,7 +47,19 @@ export default function GenerateBlog() {
 
   return (
     <div className="">
-      <div className="min-h-[5rem] bg-slate-300" />
+      <div className="min-h-[5rem] bg-slate-300 flex flex-row justify-around items-center">
+        <Link href="/user/dashboard">
+          <Image
+            src="/logo/logo.png"
+            width={70}
+            height={70}
+            alt="logo"
+            className="rounded-full"
+          />
+        </Link>
+        <div />
+        <div />
+      </div>
       <h1 className="mt-[5rem] text-2xl font-bold mb-6 w-full flex flex-col justify-center items-center">
         Generate a Blog with AI
       </h1>
