@@ -7,45 +7,17 @@ export async function GET(req) {
     // Connect to the database
     await connectToDB();
 
-    // Parse query parameters
-    const { searchParams } = new URL(req.url);
-    const blogId = searchParams.get("id");
+    // Fetch all blogs
+    const blogs = await Blog.find();
 
-    if (blogId) {
-      // Fetch a single blog by ID
-      const blog = await Blog.findById(blogId);
-
-      if (!blog) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: "Blog not found",
-          },
-          { status: 404 }
-        );
-      }
-
-      return NextResponse.json(
-        {
-          success: true,
-          message: "Blog fetched successfully",
-          data: blog,
-        },
-        { status: 200 }
-      );
-    } else {
-      // Fetch all blogs
-      const blogs = await Blog.find();
-
-      return NextResponse.json(
-        {
-          success: true,
-          message: "Blogs fetched successfully",
-          data: blogs,
-        },
-        { status: 200 }
-      );
-    }
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Blogs fetched successfully",
+        data: blogs,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error in GET handler:", error);
     return NextResponse.json(
@@ -65,8 +37,7 @@ export async function POST(req) {
     const body = await req.json();
 
     // Destructure fields from the request body
-    const { title, imageUrl, description, content, userId, creator, tags } =
-      body;
+    const { title, imageUrl, description, content, userId, tags } = body;
 
     // Validate required fields
     if (!title || !description || !userId) {
