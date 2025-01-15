@@ -20,20 +20,7 @@ const landingPage = () => {
               className="rounded-full"
             />
 
-            <div className="flex flex-row gap-x-4 px-auto bg-gray-400 rounded-3xl font-bold">
-              <Link href="/" className="navbtn1">
-                Home
-              </Link>
-              <Link href="/" className="navbtn1">
-                Plans
-              </Link>
-              <Link href="/" className="navbtn1">
-                Trainers
-              </Link>
-              <Link href="/" className="navbtn1">
-                Contact Us
-              </Link>
-            </div>
+            <div className="flex flex-row gap-x-4 px-auto bg-gray-400 rounded-3xl font-bold" />
 
             <Link
               href="/login"
