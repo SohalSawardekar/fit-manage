@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import LoadingScreen from "@components/loadingScreen";
 import "react-calendar/dist/Calendar.css";
 import Link from "@node_modules/next/link";
+import Image from "@node_modules/next/image";
 import UpdateProfile from "@components/updateProfile";
 
 const ProfilePage = () => {
@@ -61,7 +62,20 @@ const ProfilePage = () => {
   return (
     <div>
       {/* Desktop View */}
-      <div className="hidden md:flex justify-center items-center min-h-screen bg-slate-100 p-6">
+      <div className="w-full min-h-[5rem] bg-slate-300 flex flex-row items-center justify-around">
+        <Link href="/user/dashboard">
+          <Image
+            src="/logo/logo.png"
+            width={70}
+            height={70}
+            alt="logo"
+            className="rounded-full"
+          />
+        </Link>
+        <div />
+        <div />
+      </div>
+      <div className="hidden md:flex justify-start items-center min-h-screen bg-slate-50 p-6 flex-col">
         <Card className="max-w-3xl w-full max-h-lvh min-h-[80vh] shadow-sm border-dotted border-slate-500 bg-slate-300">
           <CardHeader className="flex flex-col items-center pb-0 mt-8">
             <Avatar className="h-24 w-24 mb-4">
