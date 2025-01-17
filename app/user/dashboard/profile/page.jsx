@@ -8,8 +8,8 @@ import {
   CardContent,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+} from "@components/ui/card";
+import { Button } from "@components/ui/button";
 import { useSession } from "next-auth/react";
 import LoadingScreen from "@components/loadingScreen";
 import "react-calendar/dist/Calendar.css";

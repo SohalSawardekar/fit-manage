@@ -10,11 +10,28 @@ const page = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     router.push("/");
-  //   }
-  // }, [session, router]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`/api/user?id=${session?.user?.id}`);
+        if (!res.ok) {
+          throw new Error(res.statusText);
+        }
+        const data = await res.json();
+
+        if (!data.age || !data.contactNo || !data.DOB) {
+          router.push(`/user/details/${session?.user?.id}`);
+        }
+        console.log({ data });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    if (session?.user?.id) {
+      fetchData();
+    }
+  }, [session?.user?.id]);
 
   if (status === "loading") {
     return <LoadingScreen />;

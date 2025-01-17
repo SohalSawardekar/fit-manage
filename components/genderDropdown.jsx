@@ -14,6 +14,7 @@ const GenderDropdownWithSlider = ({ userDetails, handleInputChange }) => {
   const [sliderValue, setSliderValue] = useState(50);
 
   const handleGenderChange = (value) => {
+    setGender(value)
     handleInputChange({ target: { name: "gender", value } });
   };
 
