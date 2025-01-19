@@ -35,7 +35,7 @@ const blogSchema = new mongoose.Schema(
       default: [], // Allows multiple tags for better categorization
     },
   },
-  { timestamps: true } // Automatically adds `createdAt` and `updatedAt` fields
+  { timestamps: true } 
 );
 
 // Middleware to update `updatedOn` on save

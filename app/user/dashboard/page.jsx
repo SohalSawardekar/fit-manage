@@ -1,61 +1,164 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Navbar from "@components/navbar";
+import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
+import { useState, useEffect } from "react";
 import LoadingScreen from "@components/loadingScreen";
+import Navbar from "@components/navbar";
+import { useSession } from "@node_modules/next-auth/react";
 
-const page = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+const HealthDashboard = () => {
+  const [healthData, setHealthData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchHealthData = async () => {
       try {
-        const res = await fetch(`/api/user?id=${session?.user?.id}`);
-        if (!res.ok) {
-          throw new Error(res.statusText);
-        }
-        const data = await res.json();
-
-        if (!data.age || !data.contactNo || !data.DOB) {
-          router.push(`/user/details/${session?.user?.id}`);
-        }
-        console.log({ data });
+        const response = await fetch(`/api/user/gymData/${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        setHealthData(data);
+        setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Failed to fetch health data:", error);
       }
     };
 
-    if (session?.user?.id) {
-      fetchData();
-    }
-  }, [session?.user?.id]);
+    fetchHealthData();
+  }, [userId]);
 
-  if (status === "loading") {
-    return <LoadingScreen />;
-  }
+  const renderCardContent = (content) => {
+    return content ? (
+      content
+    ) : (
+      <p className="text-gray-500 font-semibold">Data not available.</p>
+    );
+  };
+
+  const {
+    healthMetrics,
+    nutritionInsights,
+    motivationalQuote,
+    emergencyContact,
+  } = healthData || {};
 
   return (
     <div>
-      <div className="fixed top-0 left-0 w-full z-50 bg-slate-50 backdrop-blur-md shadow-md">
-        <Navbar />
-      </div>
-      <main className="mt-[5rem] w-full flex justify-center">
-        {/* Desktop View */}
-        <div className="mt-[2rem] w-full h-screen flex flex-col justify-start items-center">
-          <div className="flex flex-col w-[60%] h-[80%] bg-slate-200 justify-start items-center rounded-3xl">
-            <h1 className="mt-5 text-[5rem] z-10 font-semibold bg-gradient-to-br from-blue-700 via-cyan-600 to-green-500 bg-transparent text-transparent bg-clip-text">
-              Diet Plan
-            </h1>
+      <Navbar />
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <div className="mt-[3rem] w-full flex justify-center items-center">
+          <div className="w-[70%] grid grid-cols-1 gap-4 p-4 place-content-center">
+            {/* Health Metrics */}
+            <Card className="bg-slate-200 shadow-md border-dotted border-slate-400">
+              <CardHeader>
+                <CardTitle>
+                  <h1 className="text-[4rem] text-center font-bold bg-gradient-to-br from-blue-700 via-cyan-600 to-green-500 bg-transparent text-transparent bg-clip-text min-h-[5rem]">
+                    Health Metrics
+                  </h1>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {renderCardContent(
+                  healthMetrics && (
+                    <>
+                      <p>Weight: {healthMetrics.weight} kg</p>
+                      <p>BMI: {healthMetrics.bmi}</p>
+                      <p>
+                        Body Fat Percentage: {healthMetrics.bodyFatPercentage}%
+                      </p>
+                      <p>Muscle Mass: {healthMetrics.muscleMass} kg</p>
+                    </>
+                  )
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Nutrition Insights */}
+            <Card className="mt-[2rem] bg-slate-200 shadow-md border-dotted border-slate-400">
+              <CardHeader>
+                <CardTitle>
+                  <h1 className="text-[4rem] text-center font-bold bg-gradient-to-br from-blue-700 via-cyan-600 to-green-500 bg-transparent text-transparent bg-clip-text min-h-[5rem]">
+                    Nutrition Insights
+                  </h1>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {renderCardContent(
+                  nutritionInsights && (
+                    <>
+                      <p>
+                        Calorie Intake: {nutritionInsights.calorieIntake} kcal
+                      </p>
+                      <p>Macros:</p>
+                      <ul className="list-disc pl-4">
+                        <li>Carbs: {nutritionInsights.macros.carbs}%</li>
+                        <li>Protein: {nutritionInsights.macros.protein}%</li>
+                        <li>Fats: {nutritionInsights.macros.fats}%</li>
+                      </ul>
+                      <p>Recommended Foods:</p>
+                      <ul className="list-disc pl-4">
+                        {nutritionInsights.recommendedFoods.map(
+                          (food, index) => (
+                            <li key={index}>{food}</li>
+                          )
+                        )}
+                      </ul>
+                    </>
+                  )
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Motivational Quotes */}
+            <Card className="mt-[2rem] bg-slate-200 shadow-md border-dotted border-slate-400">
+              <CardHeader>
+                <CardTitle>
+                  <h1 className="text-[4rem] text-center font-bold bg-gradient-to-br from-blue-700 via-cyan-600 to-green-500 bg-transparent text-transparent bg-clip-text min-h-[5rem]">
+                    Motivational Quote
+                  </h1>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {renderCardContent(
+                  motivationalQuote && <p>"{motivationalQuote}"</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Emergency Contact */}
+            <Card className="mt-[2rem] bg-slate-200 shadow-md border-dotted border-slate-400">
+              <CardHeader>
+                <CardTitle>
+                  <h1 className="text-[4rem] text-center font-bold bg-gradient-to-br from-blue-700 via-cyan-600 to-green-500 bg-transparent text-transparent bg-clip-text min-h-[5rem]">
+                    Emergency Contact
+                  </h1>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {renderCardContent(
+                  emergencyContact && (
+                    <>
+                      <p>Name: {emergencyContact.name}</p>
+                      <p>Relationship: {emergencyContact.relationship}</p>
+                      <p>Phone: {emergencyContact.phone}</p>
+                    </>
+                  )
+                )}
+              </CardContent>
+            </Card>
           </div>
-          {/* <div>Workout</div>
-          <div>Calories burnt</div> */}
         </div>
-      </main>
+      )}
+      <div className="h-[5rem]" />
     </div>
   );
 };
 
-export default page;
+export default HealthDashboard;

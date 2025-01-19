@@ -1,46 +1,58 @@
-import { Schema, model, models } from 'mongoose';
+import { Schema, model, models } from "mongoose";
 
-const userDataSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    mobileNo: {
-        type: String, // Use String to accommodate leading zeros
-        required: true,
-        validate: {
-            validator: function (v) {
-                return /^\d{10}$/.test(v); // Ensures exactly 10 digits
-            },
-            message: props => `${props.value} is not a valid mobile number!`
-        }
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    address: {
-        type: String,
-        default: "N/A"
-    },
-    packageName: {
-        type: String,
-        required: true
-    },
-    age: {
-        type: Number,
-        required: true
-    },
-    weight: {
-        type: Number,
-        required: true
-    },
-    height: {
-        type: Number,
-        required: true
-    }
-})
+// User Data Schema
+const userDataSchema = new Schema(
+  {
+    userId: { type: String, required: true, unique: true },
 
-const userData = models.userData || model('userData', userDataSchema)
+    // Health Metrics
+    weight: { type: Number, required: true },
+    height: { type: Number, required: true },
+    bmi: { type: Number, required: true },
+    bodyFatPercentage: { type: Number, required: true },
+    muscleMass: { type: Number, required: true },
 
-export default userData
+    // Nutrition Insights
+    calorieIntake: { type: Number, required: true },
+    macros: {
+      carbs: { type: Number, required: true },
+      protein: { type: Number, required: true },
+      fats: { type: Number, required: true },
+    },
+    recommendedFoods: [{ type: String }],
+
+    // Motivational Quote
+    motivationalQuote: { type: String },
+
+    // Emergency Contact
+    emergencyContactName: { type: String, required: true },
+    emergencyContactRelationship: { type: String, required: true },
+    emergencyContactPhone: { type: String, required: true },
+  },
+  { timestamps: true } // Automatically creates `createdAt` and `updatedAt`
+);
+
+// Pre-save middleware to update the `updatedAt` field before save
+userDataSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
+
+// Static method to handle user data updates
+userDataSchema.statics.updateUserData = async function (userId, updatedData) {
+  try {
+    const updatedUserData = await this.findOneAndUpdate(
+      { userId }, // Find the document by userId
+      { $set: updatedData }, // Apply the updated fields
+      { new: true, runValidators: true } // Return the updated document and apply validation
+    );
+    return updatedUserData;
+  } catch (err) {
+    throw new Error("Error updating user data: " + err.message);
+  }
+};
+
+// Define the model (using `models` ensures that it will not reinitialize)
+const UserData = models.userData || model("userData", userDataSchema);
+
+export default UserData;

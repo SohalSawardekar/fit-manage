@@ -54,7 +54,7 @@ const Navbar = () => {
       {/* Desktop View */}
       <div className="hidden lg:flex flex-row justify-around items-center min-h-[5rem] bg-slate-300">
         {/* Logo */}
-        <Link href="dashboard">
+        <Link href="/user/dashboard">
           <Image
             src="/logo/logo.png"
             alt="gym_logo"
@@ -169,7 +169,7 @@ const Navbar = () => {
               <Link href="/user/dashboard/profile">Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="/user/dashboard">Membership</Link>
+              <Link href="/user/dashboard/membership">Membership</Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               disabled
