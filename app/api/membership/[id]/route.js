@@ -1,9 +1,10 @@
 import Membership from "@models/membershipData"; // MongoDB model for Membership
 import { connectToDB } from "@utils/db";
+import { NextResponse } from "next/server"; // Import NextResponse
 
-export default async function handler(req, res) {
+export async function handler(req, { params }) {
   const { method } = req;
-  const { id } = req.query; // Extract userId from URL
+  const { id } = params; // Extract userId from URL (params)
 
   await connectToDB(); // Connect to the database
 
@@ -15,35 +16,41 @@ export default async function handler(req, res) {
         );
 
         if (!membership) {
-          // If no membership data found, return an empty object
-          return res.status(200).json({});
+          return NextResponse.json({}, { status: 200 });
         }
 
-        res.status(200).json(membership);
+        return NextResponse.json(membership, { status: 200 });
       } catch (error) {
-        res.status(500).json({
-          message: "Error retrieving membership data",
-          error: error.message,
-        });
+        return NextResponse.json(
+          {
+            message: "Error retrieving membership data",
+            error: error.message,
+          },
+          { status: 500 }
+        );
       }
       break;
 
     case "POST":
-      // Handle POST request for creating/updating membership data
       try {
         const membership = new Membership(req.body);
         await membership.save();
-        res.status(201).json(membership);
+        return NextResponse.json(membership, { status: 201 });
       } catch (error) {
-        res.status(500).json({
-          message: "Error saving membership data",
-          error: error.message,
-        });
+        return NextResponse.json(
+          {
+            message: "Error saving membership data",
+            error: error.message,
+          },
+          { status: 500 }
+        );
       }
       break;
 
     default:
-      res.status(405).json({ message: "Method not allowed" });
-      break;
+      return NextResponse.json(
+        { message: "Method not allowed" },
+        { status: 405 }
+      );
   }
 }
