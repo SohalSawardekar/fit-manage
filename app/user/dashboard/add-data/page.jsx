@@ -5,15 +5,21 @@ import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
 import Navbar from "@components/navbar";
 import { useSession } from "next-auth/react";
 import { Button } from "@components/ui/button";
-import { Dialog, DialogContent } from "@components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; // Dropdown for data selection
+} from "@/components/ui/dropdown-menu";
 
 const AddDataPage = () => {
+  // MAIN FORM DATA STATES
   const [formData, setFormData] = useState({
     healthMetrics: {
       weight: "",
@@ -24,62 +30,82 @@ const AddDataPage = () => {
     },
     nutritionInsights: {
       calorieIntake: "",
-      macros: { carbs: "", protein: "", fats: "" },
+      macros: {
+        carbs: "",
+        protein: "",
+        fats: "",
+      },
       recommendedFoods: [],
     },
     motivationalQuote: "",
   });
 
+  // PROGRESS DATA STATE
   const [progressData, setProgressData] = useState({
     exerciseName: "",
     duration: "",
     caloriesBurned: "",
   });
 
+  // DIALOG/SELECTION STATES
   const [selectedDataType, setSelectedDataType] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+
+  // USER SESSION
   const { data: session } = useSession();
   const userId = session?.user?.id;
 
+  // Ensure client-side rendering for the Dialog
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  // HANDLERS FOR HEALTH, NUTRITION, QUOTE
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name.split(".")[0]]: {
-        ...formData[name.split(".")[0]],
+        ...prev[name.split(".")[0]],
         [name.split(".")[1]]: value,
       },
-    });
+    }));
   };
 
+  // HANDLER FOR PROGRESS FIELDS
   const handleProgressChange = (e) => {
     const { name, value } = e.target;
-    setProgressData({
-      ...progressData,
+    setProgressData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
+  // SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (selectedDataType !== "progress") {
+      // Submitting formData for Health/Nutrition/Motivational
       try {
-        const response = await fetch(`/api/user/addData/${userId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+        const response = await fetch(`/api/user/gymData/${userId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
 
+        if (!response.ok && response.status === 404) {
+          const response = await fetch(`/api/user/gymData/${userId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+        }
+
         if (response.ok) {
           alert("Data added successfully!");
+          // Reset the formData
           setFormData({
             healthMetrics: {
               weight: "",
@@ -103,20 +129,26 @@ const AddDataPage = () => {
         console.error("Error:", error);
         alert("Error submitting form.");
       }
-    }
-
-    if (selectedDataType === "progress") {
+    } else {
+      // Submitting progressData
       try {
-        const response = await fetch(`/api/user/addProgressData/${userId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+        const response = await fetch(`/api/user/progress/${userId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(progressData),
         });
 
+        if (!response.ok && response.status === 404) {
+          const response = await fetch(`/api/user/progress/${userId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(progressData),
+          });
+        }
+
         if (response.ok) {
           alert("Progress added successfully!");
+          // Reset the progressData
           setProgressData({
             exerciseName: "",
             duration: "",
@@ -147,7 +179,6 @@ const AddDataPage = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {/* Ask User Which Data to Input */}
               <div className="flex flex-col gap-y-[1rem]">
                 <h2 className="font-semibold">Select Data to Input</h2>
                 <div className="flex gap-4">
@@ -164,31 +195,34 @@ const AddDataPage = () => {
                       <DropdownMenuItem
                         onClick={() => {
                           setSelectedDataType("healthMetrics");
-                          setIsDialogOpen(true); // Open dialog on selection
+                          setIsDialogOpen(true);
                         }}
                       >
                         Health Metrics
                       </DropdownMenuItem>
+
                       <DropdownMenuItem
                         onClick={() => {
                           setSelectedDataType("nutritionInsights");
-                          setIsDialogOpen(true); // Open dialog on selection
+                          setIsDialogOpen(true);
                         }}
                       >
                         Nutrition Insights
                       </DropdownMenuItem>
+
                       <DropdownMenuItem
                         onClick={() => {
                           setSelectedDataType("motivationalQuote");
-                          setIsDialogOpen(true); // Open dialog on selection
+                          setIsDialogOpen(true);
                         }}
                       >
                         Motivational Quote
                       </DropdownMenuItem>
+
                       <DropdownMenuItem
                         onClick={() => {
                           setSelectedDataType("progress");
-                          setIsDialogOpen(true); // Open dialog on selection
+                          setIsDialogOpen(true);
                         }}
                       >
                         Progress
@@ -198,73 +232,197 @@ const AddDataPage = () => {
                 </div>
               </div>
 
-              {/* Render Dialog for Selected Data Type */}
               {isClient && (
                 <form onSubmit={handleSubmit}>
-                  {/* Health Metrics Dialog */}
+                  {/* ------------------ Health Metrics Dialog ------------------ */}
                   {selectedDataType === "healthMetrics" && isDialogOpen && (
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <Dialog open={true} onOpenChange={setIsDialogOpen}>
                       <DialogContent className="max-w-[30vw] overflow-auto">
-                        <h2 className="font-semibold mt-[1rem]">
-                          Health Metrics
-                        </h2>
-                        <div className="flex flex-col mt-1 items-start translate-x-1 gap-y-1">
+                        <DialogHeader>
+                          <DialogTitle>Health Metrics</DialogTitle>
+                        </DialogHeader>
+                        <div className="flex flex-col mt-4 items-start gap-y-2">
                           <label>Weight (kg):</label>
                           <input
                             type="number"
                             name="healthMetrics.weight"
                             value={formData.healthMetrics.weight}
                             onChange={handleChange}
-                            className="w-[20%] p-2 my-2 border border-slate-400 rounded-2xl"
+                            className="w-[20%] p-2 border border-slate-400 rounded-2xl"
                           />
-                        </div>
-                        <div className="flex flex-col mt-1 items-start translate-x-1 gap-y-1">
                           <label>Height (cm):</label>
                           <input
                             type="number"
                             name="healthMetrics.height"
                             value={formData.healthMetrics.height}
                             onChange={handleChange}
-                            className="w-[20%] p-2 my-2 border border-slate-400 rounded-2xl"
+                            className="w-[20%] p-2 border border-slate-400 rounded-2xl"
                           />
-                        </div>
-                        <div className="flex flex-col mt-1 items-start translate-x-1 gap-y-1">
                           <label>BMI:</label>
                           <input
                             type="number"
                             name="healthMetrics.bmi"
                             value={formData.healthMetrics.bmi}
                             onChange={handleChange}
-                            className="w-[20%] p-2 my-2 border border-slate-400 rounded-2xl"
+                            className="w-[20%] p-2 border border-slate-400 rounded-2xl"
                           />
-                        </div>
-                        <div className="flex flex-col mt-1 items-start translate-x-1 gap-y-1">
                           <label>Body Fat Percentage:</label>
                           <input
                             type="number"
                             name="healthMetrics.bodyFatPercentage"
                             value={formData.healthMetrics.bodyFatPercentage}
                             onChange={handleChange}
-                            className="w-[20%] p-2 my-2 border border-slate-400 rounded-2xl"
+                            className="w-[20%] p-2 border border-slate-400 rounded-2xl"
                           />
-                        </div>
-                        <div className="flex flex-col mt-1 items-start translate-x-1 gap-y-1">
                           <label>Muscle Mass (kg):</label>
                           <input
                             type="number"
                             name="healthMetrics.muscleMass"
                             value={formData.healthMetrics.muscleMass}
                             onChange={handleChange}
-                            className="w-[20%] p-2 my-2 border border-slate-400 rounded-2xl"
+                            className="w-[20%] p-2 border border-slate-400 rounded-2xl"
                           />
+                          <div className="w-full flex justify-center items-center mt-4">
+                            <Button
+                              type="submit"
+                              className="w-[20%] bg-gradient-to-br from-blue-700 via-cyan-600 to-green-500 text-white font-semibold py-2"
+                            >
+                              Submit
+                            </Button>
+                          </div>
                         </div>
-                        <div className="w-full flex justify-center items-center mt-4">
-                          <Button
-                            type="submit"
-                            className="w-[20%] mt-4 bg-gradient-to-br from-blue-700 via-cyan-600 to-green-500 text-white font-semibold py-2"
-                          >
-                            Submit
-                          </Button>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+
+                  {/* ------------------ Nutrition Insights Dialog ------------------ */}
+                  {selectedDataType === "nutritionInsights" && isDialogOpen && (
+                    <Dialog open={true} onOpenChange={setIsDialogOpen}>
+                      <DialogContent className="max-w-[30vw] overflow-auto">
+                        <DialogHeader>
+                          <DialogTitle>Nutrition Insights</DialogTitle>
+                        </DialogHeader>
+                        <div className="flex flex-col mt-4 items-start gap-y-2">
+                          <label>Calorie Intake (kcal):</label>
+                          <input
+                            type="number"
+                            name="nutritionInsights.calorieIntake"
+                            value={formData.nutritionInsights.calorieIntake}
+                            onChange={handleChange}
+                            className="w-[20%] p-2 border border-slate-400 rounded-2xl"
+                          />
+                          <label>Carbs (%):</label>
+                          <input
+                            type="number"
+                            name="nutritionInsights.macros.carbs"
+                            value={formData.nutritionInsights.macros.carbs}
+                            onChange={handleChange}
+                            className="w-[20%] p-2 border border-slate-400 rounded-2xl"
+                          />
+                          <label>Protein (%):</label>
+                          <input
+                            type="number"
+                            name="nutritionInsights.macros.protein"
+                            value={formData.nutritionInsights.macros.protein}
+                            onChange={handleChange}
+                            className="w-[20%] p-2 border border-slate-400 rounded-2xl"
+                          />
+                          <label>Fats (%):</label>
+                          <input
+                            type="number"
+                            name="nutritionInsights.macros.fats"
+                            value={formData.nutritionInsights.macros.fats}
+                            onChange={handleChange}
+                            className="w-[20%] p-2 border border-slate-400 rounded-2xl"
+                          />
+                          {/* For recommended foods, you could show a text input or multiple checkboxes */}
+                          <div className="w-full flex justify-center items-center mt-4">
+                            <Button
+                              type="submit"
+                              className="w-[20%] bg-gradient-to-br from-blue-700 via-cyan-600 to-green-500 text-white font-semibold py-2"
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+
+                  {/* ------------------ Motivational Quote Dialog ------------------ */}
+                  {selectedDataType === "motivationalQuote" && isDialogOpen && (
+                    <Dialog open={true} onOpenChange={setIsDialogOpen}>
+                      <DialogContent className="max-w-[30vw] overflow-auto">
+                        <DialogHeader>
+                          <DialogTitle>Motivational Quote</DialogTitle>
+                        </DialogHeader>
+                        <div className="flex flex-col mt-4 items-start gap-y-2">
+                          <label>Your Quote:</label>
+                          <textarea
+                            name="motivationalQuote"
+                            value={formData.motivationalQuote}
+                            onChange={(e) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                motivationalQuote: e.target.value,
+                              }))
+                            }
+                            rows={3}
+                            className="w-full p-2 border border-slate-400 rounded-2xl"
+                          />
+                          <div className="w-full flex justify-center items-center mt-4">
+                            <Button
+                              type="submit"
+                              className="w-[20%] bg-gradient-to-br from-blue-700 via-cyan-600 to-green-500 text-white font-semibold py-2"
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+
+                  {/* ------------------ Progress Dialog ------------------ */}
+                  {selectedDataType === "progress" && isDialogOpen && (
+                    <Dialog open={true} onOpenChange={setIsDialogOpen}>
+                      <DialogContent className="max-w-[30vw] overflow-auto">
+                        <DialogHeader>
+                          <DialogTitle>Progress</DialogTitle>
+                        </DialogHeader>
+                        <div className="flex flex-col mt-4 items-start gap-y-2">
+                          <label>Exercise Name:</label>
+                          <input
+                            type="text"
+                            name="progress.exerciseName"
+                            value={progressData.exerciseName}
+                            onChange={handleProgressChange}
+                            className="w-full p-2 border border-slate-400 rounded-2xl"
+                          />
+                          <label>Duration (min):</label>
+                          <input
+                            type="number"
+                            name="progress.duration"
+                            value={progressData.duration}
+                            onChange={handleProgressChange}
+                            className="w-full p-2 border border-slate-400 rounded-2xl"
+                          />
+                          <label>Calories Burned:</label>
+                          <input
+                            type="number"
+                            name="progress.caloriesBurned"
+                            value={progressData.caloriesBurned}
+                            onChange={handleProgressChange}
+                            className="w-full p-2 border border-slate-400 rounded-2xl"
+                          />
+                          <div className="w-full flex justify-center items-center mt-4">
+                            <Button
+                              type="submit"
+                              className="w-[20%] bg-gradient-to-br from-blue-700 via-cyan-600 to-green-500 text-white font-semibold py-2"
+                            >
+                              Submit
+                            </Button>
+                          </div>
                         </div>
                       </DialogContent>
                     </Dialog>

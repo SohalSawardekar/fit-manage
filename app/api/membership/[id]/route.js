@@ -1,12 +1,12 @@
-import Membership from "@models/membershipData"; // MongoDB model for Membership
+import Membership from "@models/membershipData";
 import { connectToDB } from "@utils/db";
-import { NextResponse } from "next/server"; // Import NextResponse
+import { NextResponse } from "next/server";
 
 export async function handler(req, { params }) {
   const { method } = req;
-  const { id } = params; // Extract userId from URL (params)
+  const { id } = params;
 
-  await connectToDB(); // Connect to the database
+  await connectToDB();
 
   switch (method) {
     case "GET":

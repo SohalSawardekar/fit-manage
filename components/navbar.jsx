@@ -171,11 +171,8 @@ const Navbar = () => {
             <DropdownMenuItem asChild className="cursor-pointer">
               <Link href="/user/dashboard/membership">Membership</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              disabled
-              className="cursor-not-allowed opacity-50"
-            >
-              Billing
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link href="/user/dashboard/payments">Payment History</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="cursor-pointer">
               <div onClick={signOut}>Log out</div>

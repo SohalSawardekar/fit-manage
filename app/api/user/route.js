@@ -3,10 +3,14 @@ import mongoose from "mongoose";
 import User from "@models/users";
 import { NextResponse } from "next/server";
 
+/**
+ * GET endpoint:
+ * - Expects query param `?id=<userId>`
+ */
 export async function GET(req) {
   try {
-    const { searchParams } = new URL(req.url); // Retrieve query parameters from URL
-    const userId = searchParams.get("id"); // Get userId from query parameter
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("id");
 
     if (!userId) {
       return new NextResponse(
@@ -39,7 +43,52 @@ export async function GET(req) {
   }
 }
 
-// Backend PUT endpoint
+/**
+ * POST endpoint:
+ * - Creates a new user document
+ * - Expects the user data in the request body (JSON)
+ */
+export async function POST(req) {
+  try {
+    // Parse the request body
+    const userData = await req.json();
+
+    // Validate required fields, for example "email" or "name"
+    // (Remove or expand based on your app's requirements)
+    if (!userData.email || !userData.name) {
+      return NextResponse.json(
+        { message: "Email and name are required" },
+        { status: 400 }
+      );
+    }
+
+    await connectToDB();
+
+    // Optionally calculate age if DOB is provided
+    if (userData.DOB) {
+      const dob = new Date(userData.DOB);
+      userData.age = new Date().getFullYear() - dob.getFullYear();
+    }
+
+    // Create a new user in the database
+    const newUser = await User.create(userData);
+
+    return NextResponse.json(newUser, { status: 201 });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    return NextResponse.json(
+      { message: "An error occurred while creating user" },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * PUT endpoint:
+ * - Updates an existing user document
+ * - Expects the updated fields in the request body (JSON)
+ * - The user ID is part of the request body: _id
+ */
 export async function PUT(req) {
   try {
     // Parse the request body for the data to update
@@ -48,16 +97,15 @@ export async function PUT(req) {
 
     // Ensure userId is provided
     if (!userId) {
-      return new Response(JSON.stringify({ message: "User ID is required" }), {
-        status: 400,
-      });
+      return NextResponse.json(
+        { message: "User ID is required" },
+        { status: 400 }
+      );
     }
 
     // Validate the userId to ensure it's a valid MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return new Response(JSON.stringify({ message: "Invalid User ID" }), {
-        status: 400,
-      });
+      return NextResponse.json({ message: "Invalid User ID" }, { status: 400 });
     }
 
     // Automatically calculate the age if DOB is provided
@@ -84,18 +132,18 @@ export async function PUT(req) {
     );
 
     if (!result) {
-      return new Response(
-        JSON.stringify({ message: "User not found or no updates made" }),
+      return NextResponse.json(
+        { message: "User not found or no updates made" },
         { status: 404 }
       );
     }
 
     console.log(`User data updated successfully: ${userId}`);
-    return new Response(JSON.stringify(result), { status: 200 });
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error("Error updating user data:", error);
-    return new Response(
-      JSON.stringify({ message: "An error occurred while updating user data" }),
+    return NextResponse.json(
+      { message: "An error occurred while updating user data" },
       { status: 500 }
     );
   }
