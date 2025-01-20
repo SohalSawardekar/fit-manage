@@ -9,5 +9,7 @@ const paymentSchema = new mongoose.Schema({
   notes: String,
 });
 
-export default mongoose.models.Payment ||
-  mongoose.model("Payment", paymentSchema);
+const Payment =
+  mongoose.models.Payment || mongoose.model("Payment", paymentSchema);
+
+export default Payment;

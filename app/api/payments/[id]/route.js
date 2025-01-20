@@ -1,4 +1,4 @@
-import connectToDB from "@/utils/db";
+import { connectToDB } from "@/utils/db";
 import Payment from "@/models/payment";
 
 export default async function handler(req, res) {

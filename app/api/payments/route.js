@@ -1,5 +1,5 @@
-import connectToDB from "@/utils/db";
-import Payment from "@/models/payment"; // your Payment Mongoose model
+import { connectToDB } from "@/utils/db";
+import Payment from "@/models/payment";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
